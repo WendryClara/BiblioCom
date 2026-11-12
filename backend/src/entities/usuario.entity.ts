@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Emprestimo } from './emprestimo.entity.js';
+import type { Emprestimo } from './emprestimo.entity.js';
 
 export enum PerfilUsuario {
   LEITOR = 'LEITOR',
@@ -41,6 +41,6 @@ export class Usuario {
   @CreateDateColumn({ type: 'timestamptz', name: 'criado_em' })
   criadoEm: Date;
 
-  @OneToMany(() => Emprestimo, (emprestimo) => emprestimo.usuario)
+  @OneToMany('Emprestimo', (emprestimo: Emprestimo) => emprestimo.usuario)
   emprestimos: Emprestimo[];
 }

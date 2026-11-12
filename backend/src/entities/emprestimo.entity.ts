@@ -6,8 +6,8 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { Usuario } from './usuario.entity.js';
-import { Exemplar } from './exemplar.entity.js';
+import type { Usuario } from './usuario.entity.js';
+import type { Exemplar } from './exemplar.entity.js';
 
 export enum StatusEmprestimo {
   ATIVO = 'ATIVO',
@@ -52,14 +52,14 @@ export class Emprestimo {
   })
   status: StatusEmprestimo;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.emprestimos, {
+  @ManyToOne('Usuario', (usuario: Usuario) => usuario.emprestimos, {
     nullable: false,
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 
-  @ManyToOne(() => Exemplar, (exemplar) => exemplar.emprestimos, {
+  @ManyToOne('Exemplar', (exemplar: Exemplar) => exemplar.emprestimos, {
     nullable: false,
     onDelete: 'RESTRICT',
   })

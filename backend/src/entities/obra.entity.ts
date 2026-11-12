@@ -9,9 +9,9 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { Categoria } from './categoria.entity.js';
-import { Autor } from './autor.entity.js';
-import { Exemplar } from './exemplar.entity.js';
+import type { Categoria } from './categoria.entity.js';
+import type { Autor } from './autor.entity.js';
+import type { Exemplar } from './exemplar.entity.js';
 
 @Entity('obras')
 @Index(['titulo', 'editora', 'anoPublicacao'], { unique: true })
@@ -31,14 +31,14 @@ export class Obra {
   @Column({ type: 'varchar', length: 120, nullable: true })
   editora: string | null;
 
-  @ManyToOne(() => Categoria, (categoria) => categoria.obras, {
+  @ManyToOne('Categoria', (categoria: Categoria) => categoria.obras, {
     nullable: false,
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'categoria_id' })
   categoria: Categoria;
 
-  @ManyToMany(() => Autor, (autor) => autor.obras)
+  @ManyToMany('Autor', (autor: Autor) => autor.obras)
   @JoinTable({
     name: 'obras_autores',
     joinColumn: { name: 'obra_id', referencedColumnName: 'id' },
@@ -46,6 +46,6 @@ export class Obra {
   })
   autores: Autor[];
 
-  @OneToMany(() => Exemplar, (exemplar) => exemplar.obra)
+  @OneToMany('Exemplar', (exemplar: Exemplar) => exemplar.obra)
   exemplares: Exemplar[];
 }

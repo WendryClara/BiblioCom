@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Obra } from './obra.entity.js';
+import type { Obra } from './obra.entity.js';
 
 @Entity('autores')
 export class Autor {
@@ -12,6 +12,6 @@ export class Autor {
   @Column({ type: 'varchar', length: 80, nullable: true })
   nacionalidade: string | null;
 
-  @ManyToMany(() => Obra, (obra) => obra.autores)
+  @ManyToMany('Obra', (obra: Obra) => obra.autores)
   obras: Obra[];
 }

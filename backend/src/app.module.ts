@@ -11,9 +11,9 @@ import { ObrasModule } from './obras/obras.module.js';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'sua_senha_do_postgres', // Troque pela senha do seu PostgreSQL
+      password: '1234', // Troque pela senha do seu PostgreSQL
       database: 'bibliocom',              // Nome do banco de dados
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [import.meta.dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false, // Cria e atualiza as tabelas automaticamente em desenvolvimento
     }),
     ObrasModule,

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Obra } from './obra.entity.js';
+import type { Obra } from './obra.entity.js';
 
 @Entity('categorias')
 export class Categoria {
@@ -12,6 +12,6 @@ export class Categoria {
   @Column({ type: 'text', nullable: true })
   descricao: string | null;
 
-  @OneToMany(() => Obra, (obra) => obra.categoria)
+  @OneToMany('Obra', (obra: Obra) => obra.categoria)
   obras: Obra[];
 }

@@ -6,8 +6,8 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Obra } from './obra.entity.js';
-import { Emprestimo } from './emprestimo.entity.js';
+import type { Obra } from './obra.entity.js';
+import type { Emprestimo } from './emprestimo.entity.js';
 
 export enum StatusExemplar {
   DISPONIVEL = 'DISPONIVEL',
@@ -54,13 +54,13 @@ export class Exemplar {
   })
   status: StatusExemplar;
 
-  @ManyToOne(() => Obra, (obra) => obra.exemplares, {
+  @ManyToOne('Obra', (obra: Obra) => obra.exemplares, {
     nullable: false,
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'obra_id' })
   obra: Obra;
 
-  @OneToMany(() => Emprestimo, (emprestimo) => emprestimo.exemplar)
+  @OneToMany('Emprestimo', (emprestimo: Emprestimo) => emprestimo.exemplar)
   emprestimos: Emprestimo[];
 }

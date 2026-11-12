@@ -101,3 +101,64 @@ erDiagram
 * **`categorias.nome` (`UNIQUE`):** Evita categorias duplicadas com o mesmo nome (ex.: duas categorias "Romance"), mantendo a integridade dos filtros de busca.
 * **`@Index(['usuario', 'exemplar', 'status'])` em `Emprestimo`:** Otimiza consultas frequentes de validação de regras de negócio (verificar se um usuário já possui empréstimos ativos ou atrasados) e rastreabilidade de circulação.
 *
+
+---
+
+## 5. Verificação
+
+### 5.1 Execução das migrações no banco vazio (`npm run migration:run`)
+
+Ao executar `npm run migration:run` sobre o banco vazio `bibliocom` (com `synchronize: false`), o TypeORM criou a tabela de controle `migrations` e aplicou todas as tabelas, enums, chaves estrangeiras (`ON DELETE RESTRICT`) e índices compostos sem erros:
+
+```text
+query: SELECT * FROM current_schema()
+query: CREATE TABLE "migrations" ("id" SERIAL NOT NULL, "timestamp" bigint NOT NULL, "name" character varying NOT NULL, CONSTRAINT "PK_8c82d7f526340ab734260ea46be" PRIMARY KEY ("id"))
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+0 migrations are already loaded in the database.
+1 migrations were found in the source code.
+1 migrations are new migrations must be executed.
+query: START TRANSACTION
+query: CREATE TYPE "public"."usuarios_perfil_enum" AS ENUM('LEITOR', 'BIBLIOTECARIO', 'ADMIN')
+query: CREATE TABLE "usuarios" (...)
+query: CREATE TABLE "categorias" (...)
+query: CREATE TABLE "autores" (...)
+query: CREATE TABLE "obras" (...)
+query: CREATE TABLE "exemplares" (...)
+query: CREATE TABLE "emprestimos" (...)
+query: CREATE TABLE "obras_autores" (...)
+query: INSERT INTO "migrations"("timestamp", "name") VALUES (\$1, \$2) -- PARAMETERS: [..., "CriarTabelasIniciaisBiblioCom..."]
+Migration CriarTabelasIniciaisBiblioCom has been executed successfully.
+query: COMMIT
+```
+
+*(A reversão com `npm run migration:revert` também foi validada, removendo as tabelas na ordem inversa sem erros).*
+
+### 5.2 Contagem de consultas na listagem paginada (`GET /api/obras`)
+
+Com `logging: true` habilitado no TypeORM, a chamada paginada `GET /api/obras?page=1&limit=10` dispara exatamente **3 consultas SQL** fixas (independentemente da quantidade de obras retornadas), eliminando o problema de **N+1**:
+
+1. **Consulta de contagem (`COUNT`):** Calcula o total de obras para os metadados de paginação.
+2. **Consulta paginada de IDs (`SELECT DISTINCT ... LIMIT 10 OFFSET 0`):** Garante a paginação exata sem distorção pelos `JOIN`s das coleções.
+3. **Consulta única com `LEFT JOIN`:** Carrega todas as obras da página junto com `categoria`, `autores` (via `obras_autores`) e `exemplares` em uma única ida ao banco.
+
+### 5.3 Demonstração de violação de restrição (`ON DELETE RESTRICT` → HTTP `409 Conflict`)
+
+Tentativa de excluir uma obra que possui exemplares físicos vinculados no acervo:
+
+**Requisição (`curl`):**
+```bash
+curl.exe -i -X DELETE "http://localhost:3000/api/obras/aafd9af9-5ea3-413e-bfb2-849037f2936f"
+```
+
+**Resposta da API (tratada pelo `TypeOrmExceptionFilter` com status `409`):**
+```http
+HTTP/1.1 409 Conflict
+Content-Type: application/json; charset=utf-8
+
+{
+  "statusCode": 409,
+  "erro": "Violação de integridade referencial (RESTRICT)",
+  "mensagem": "Operação bloqueada porque existem registros dependentes vinculados a este item.",
+  "detalhe": "Chave (id)=(aafd9af9-5ea3-413e-bfb2-849037f2936f) ainda é referenciada pela tabela \"exemplares\"."
+}
+```
