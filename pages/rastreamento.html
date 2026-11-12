@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rastreamento de Entregas</title>
+  <link rel="stylesheet" href="css/rastreamento.css" />
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">Entregas S.A.</div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><em>Home</em></a></li>
+          <li><a href="admin.html"><em>Área Administrativa</em></a></li>
+          <li><a href="rastreamento.html"><em>Rastreamento</em></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <form id="form-rastreamento">
+      <label for="codigo">Código de Rastreamento:</label>
+      <input type="text" id="codigo" required>
+      <button type="submit">Buscar</button>
+    </form>
+    <section>
+      <h3>Status Atual</h3>
+      <p id="status">Status atual da encomenda:</p>
+    </section>
+    <section>
+      <h3>Histórico de Atualizações</h3>
+      <ul id="historico"></ul>
+    </section>
+  </main>
+  <footer>
+    <p>Desenvolvido por Thayná Fortunato e Esley Raniele ©2025</p>
+  </footer>
+  <script src="js/rastreamento.js"></script>
+</body>
+</html>

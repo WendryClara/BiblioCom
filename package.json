@@ -1,0 +1,24 @@
+{
+  "name": "sistema_entregas",
+  "version": "1.0.0",
+  "description": "DESCRIÇÃO DO PROJETO:\r -Aplicação web criado para acompanhar rotas e entregas de encomendas. Esse sistema permite cadastrar clientes, encomendas, rotas e acompanhar o status de entrega",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bochches/Sistema_entregas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bochches/Sistema_entregas/issues"
+  },
+  "homepage": "https://github.com/bochches/Sistema_entregas#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
