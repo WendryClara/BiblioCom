@@ -1,0 +1,323 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #e3f0ff 0%, #f4f7fb 100%);
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInBg 1.2s;
+}
+
+@keyframes fadeInBg {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+header {
+  background: #174ea6;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(23, 78, 166, 0.08);
+  animation: fadeInDown 0.7s;
+}
+
+@keyframes fadeInDown {
+  from { transform: translateY(-40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+}
+
+.logo {
+  font-size: 2em;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 18px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.08em;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: background 0.2s, color 0.2s;
+}
+
+nav a:hover {
+  background: #2968c8;
+  color: #fff;
+}
+
+main {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 48px 12px 24px 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+form {
+  background: #fff;
+  padding: 32px 28px;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(23, 78, 166, 0.13);
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.7s;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+label {
+  font-weight: 700;
+  color: #174ea6;
+  font-size: 1.15em;
+  margin-bottom: 6px;
+}
+
+input[type="text"] {
+  padding: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 14px;
+  font-size: 1.1em;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(.4,1.4,.6,1);
+  background: #f6f7fb;
+  box-shadow: 0 2px 8px rgba(23, 78, 166, 0.04);
+  margin-bottom: 10px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #174ea6;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(23, 78, 166, 0.10);
+}
+
+button {
+  padding: 16px 36px;
+  background: linear-gradient(90deg, #174ea6 60%, #2968c8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 1.15em;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(23, 78, 166, 0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+  align-self: flex-start;
+  margin-top: 12px;
+}
+button::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: linear-gradient(120deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+button:hover::after {
+  opacity: 1;
+}
+button:hover {
+  background: linear-gradient(90deg, #2968c8 60%, #174ea6 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(23, 78, 166, 0.18);
+}
+button:active {
+  background: #003c8f;
+}
+
+section {
+  background: #fff;
+  padding: 32px 28px;
+  margin-bottom: 0;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(23, 78, 166, 0.13);
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.7s;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+section:not(:first-child) {
+  margin-top: 0;
+}
+section:hover {
+  box-shadow: 0 16px 48px rgba(23, 78, 166, 0.18);
+}
+
+h3 {
+  color: #174ea6;
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  font-weight: 800;
+  text-align: left;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+#status {
+  font-size: 1.25em;
+  background: linear-gradient(90deg, #e3f0ff 60%, #f6f7fb 100%);
+  padding: 22px 24px;
+  border-left: 7px solid #174ea6;
+  border-radius: 16px;
+  margin-bottom: 0;
+  box-shadow: 0 5px 15px rgba(23, 78, 166, 0.10);
+  color: #174ea6;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeInUp 0.8s;
+}
+#status::before {
+  content: '🔎';
+  font-size: 1.5em;
+  margin-right: 8px;
+}
+
+#historico {
+  list-style: none;
+  padding: 0 0 0 18px;
+  position: relative;
+  margin-bottom: 0;
+}
+#historico::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #174ea6 0%, #2968c8 100%);
+  border-radius: 2px;
+  opacity: 0.15;
+}
+#historico li {
+  margin-bottom: 18px;
+  padding: 18px 18px 18px 24px;
+  background: #f6f7fb;
+  border-radius: 14px;
+  border-left: 5px solid #2968c8;
+  transition: all 0.3s cubic-bezier(.4,1.4,.6,1);
+  position: relative;
+  font-size: 1.08em;
+  box-shadow: 0 2px 8px rgba(23, 78, 166, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInUp 0.7s;
+}
+#historico li:last-child {
+  margin-bottom: 0;
+  border-left: 5px solid #1de9b6;
+  background: #e0f7fa;
+}
+#historico li::before {
+  content: '⏺';
+  color: #174ea6;
+  font-size: 1.1em;
+  margin-right: 8px;
+}
+#historico li:hover {
+  background: #e3e6f0;
+  transform: translateX(5px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(23, 78, 166, 0.13);
+}
+
+footer {
+  text-align: center;
+  padding: 28px;
+  margin-top: auto;
+  background: #e3e6f0;
+  color: #174ea6;
+  font-size: 1.08em;
+  border-top: 1px solid #cfd8dc;
+  letter-spacing: 0.5px;
+}
+footer p {
+  color: #174ea6;
+  margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 1100px) {
+  main {
+    max-width: 98vw;
+    padding: 12px 2vw 12px 2vw;
+  }
+}
+@media (max-width: 700px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  main {
+    padding: 16px 2vw 8px 2vw;
+    gap: 18px;
+  }
+  form, section {
+    padding: 14px 6px;
+    border-radius: 12px;
+    gap: 16px;
+  }
+  #status {
+    font-size: 1.08em;
+    padding: 12px 10px;
+  }
+  #historico li {
+    font-size: 0.98em;
+    padding: 10px 10px 10px 16px;
+    border-radius: 8px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+  }
+}
+  

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Área Administrativa</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .admin-tabs {
+      display: flex;
+      gap: 18px;
+      margin: 0 auto 32px auto;
+      justify-content: center;
+      padding-top: 24px;
+    }
+    .admin-tab {
+      background: #f6f7fb;
+      color: #174ea6;
+      border: none;
+      border-radius: 18px 18px 0 0;
+      padding: 14px 32px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 2px 8px rgba(23, 78, 166, 0.06);
+      outline: none;
+    }
+    .admin-tab.active, .admin-tab:hover {
+      background: linear-gradient(90deg, #174ea6 60%, #2968c8 100%);
+      color: #fff;
+    }
+    .admin-section { display: none; animation: fadeInUp 0.5s; }
+    .admin-section.active { display: block; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(30,40,80,0.25);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeInBg 0.3s;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(23, 78, 166, 0.18);
+      padding: 20px 22px 18px 22px;
+      min-width: 120px;
+      max-width: 75vw;
+      position: relative;
+      animation: fadeInUp 0.4s;
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      background: none;
+      border: none;
+      font-size: 1.7em;
+      color: #174ea6;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s;
+      z-index: 10;
+    }
+    .modal-close:hover {
+      color: #c62828;
+    }
+    .modal-card h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: #174ea6;
+      font-size: 1.5em;
+      font-weight: 800;
+      text-align: left;
+    }
+    /* Filtros */
+    .filtros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 18px;
+      align-items: flex-end;
+      background: #f6f7fb;
+      border-radius: 16px;
+      padding: 18px 18px 10px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(23, 78, 166, 0.06);
+    }
+    .filtros label {
+      font-size: 1em;
+      color: #174ea6;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filtros input, .filtros select {
+      margin: 0;
+      min-width: 120px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1.5px solid #e0e0e0;
+      padding: 8px 12px 8px 36px;
+      background: #fff url('data:image/svg+xml;utf8,<svg fill="%23174ea6" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99a1 1 0 001.41-1.41l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>') no-repeat 8px center;
+    }
+    .filtros select {
+      background: #fff url('data:image/svg+xml;utf8,<svg fill="%23174ea6" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat 8px center;
+      padding-left: 36px;
+    }
+    .filtros button {
+      margin-left: 8px;
+      padding: 10px 24px;
+      font-size: 1em;
+      font-weight: 700;
+      border-radius: 18px;
+      background: linear-gradient(90deg, #174ea6 60%, #2968c8 100%);
+      color: #fff;
+      border: none;
+      box-shadow: 0 2px 8px rgba(23, 78, 166, 0.08);
+      transition: background 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .filtros button:hover {
+      background: linear-gradient(90deg, #2968c8 60%, #174ea6 100%);
+    }
+    @media (max-width: 900px) {
+      .filtros {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 8px 8px 8px;
+      }
+      .filtros label {
+        font-size: 0.98em;
+      }
+    }
+    @media (max-width: 600px) {
+      .modal-card {
+        padding: 18px 6px 18px 6px;
+        min-width: 0;
+      }
+      .filtros {
+        padding: 8px 2px 4px 2px;
+        border-radius: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">Entregas S.A.</div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><em>Home</em></a></li>
+          <li><a href="admin.html"><em>Área Administrativa</em></a></li>
+          <li><a href="rastreamento.html"><em>Rastreamento</em></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-section="clientes">Clientes</button>
+      <button class="admin-tab" data-section="encomendas">Encomendas</button>
+      <button class="admin-tab" data-section="rotas">Rotas</button>
+      <button class="admin-tab" data-section="entregas">Entregas</button>
+    </div>
+    <section id="clientes" class="admin-section active">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+        <button id="btn-novo-cliente" class="btn">Novo Cliente</button>
+      </div>
+      <h3>Lista de Clientes</h3>
+      <div class="filtros">
+        <label for="filtro-nome">Nome
+          <input type="text" id="filtro-nome" placeholder="Filtrar por nome" />
+        </label>
+        <label for="filtro-cpf">CPF/CNPJ
+          <input type="text" id="filtro-cpf" placeholder="Filtrar por CPF/CNPJ" />
+        </label>
+        <button id="btn-filtrar-clientes">Filtrar</button>
+      </div>
+      <table id="tabela-clientes">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CPF/CNPJ</th>
+            <th>E-mail</th>
+            <th>Endereço</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <!-- Modal de cadastro de cliente -->
+      <div class="modal-overlay" id="modal-cliente">
+        <div class="modal-card">
+          <button class="modal-close" id="close-modal-cliente">×</button>
+          <h2>Novo Cliente</h2>
+          <form id="form-clientes">
+            <span>Nome Completo:</span>
+            <input type="text" id="nome" required>
+            <span>CPF/CNPJ:</span>
+            <input type="text" id="cpfCnpj" required>
+            <span>E-mail:</span>
+            <input type="email" id="email" required>
+            <span>Endereço:</span>
+            <input type="text" id="endereco" required>
+            <div class="actions">
+              <button type="submit">Cadastrar Cliente</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="encomendas" class="admin-section">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+        <button id="btn-nova-encomenda" class="btn">Nova Encomenda</button>
+      </div>
+      <h3>Lista de Encomendas</h3>
+      <div class="filtros">
+        <label for="filtro-tipo">Tipo
+          <select id="filtro-tipo">
+            <option value="">Todos os tipos</option>
+            <option value="documento">Documento</option>
+            <option value="caixa">Caixa</option>
+            <option value="palete">Palete</option>
+          </select>
+        </label>
+        <label for="filtro-peso-max">Peso máx.
+          <input type="number" id="filtro-peso-max" step="0.01" placeholder="Máximo">
+        </label>
+        <label for="filtro-peso-min">Peso mín.
+          <input type="number" id="filtro-peso-min" step="0.01" placeholder="Mínimo">
+        </label>
+        <button id="btn-filtrar-encomendas">Filtrar</button>
+      </div>
+      <table id="tabela-encomendas">
+        <thead>
+          <tr>
+            <th>Peso</th>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th>Endereço</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <!-- Modal de cadastro de encomenda -->
+      <div class="modal-overlay" id="modal-encomenda">
+        <div class="modal-card">
+          <button class="modal-close" id="close-modal-encomenda">×</button>
+          <h2>Nova Encomenda</h2>
+          <form id="form-encomendas">
+            <span>Peso da encomenda(kg):</span>
+            <input type="number" id="peso" step="0.01" required>
+            <span>Tipo de encomenda:</span>
+            <select id="tipo" required>
+              <option value="">Selecione</option>
+              <option value="documento">Documento</option>
+              <option value="caixa">Caixa</option>
+              <option value="palete">Palete</option>
+            </select>
+            <span>Descrição da encomenda:</span>
+            <textarea id="descricao" maxlength="200"></textarea>
+            <span>Endereço de entrega:</span>
+            <input type="text" id="endereco-entrega" required>
+            <div class="actions">
+              <button type="submit">Cadastrar Encomenda</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="rotas" class="admin-section">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+        <button id="btn-nova-rota" class="btn">Nova Rota</button>
+      </div>
+      <h3>Lista de Rotas</h3>
+      <div class="filtros">
+        <label for="filtro-origem">Origem
+          <input type="text" id="filtro-origem" placeholder="Filtrar por origem" />
+        </label>
+        <label for="filtro-destino">Destino
+          <input type="text" id="filtro-destino" placeholder="Filtrar por destino" />
+        </label>
+        <button id="btn-filtrar-rotas">Filtrar</button>
+      </div>
+      <table id="tabela-rotas">
+        <thead>
+          <tr>
+            <th>Origem</th>
+            <th>Destino</th>
+            <th>Distância (km)</th>
+            <th>Tempo estimado para entrega(h)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <!-- Modal de cadastro de rota -->
+      <div class="modal-overlay" id="modal-rota">
+        <div class="modal-card">
+          <button class="modal-close" id="close-modal-rota">×</button>
+          <h2>Nova Rota</h2>
+          <form id="form-rotas">
+            <span>Origem (cidade ou centro):</span>
+            <input type="text" id="origem" required>
+            <span>Destino final:</span>
+            <input type="text" id="destino" required>
+            <span>Distância (km):</span>
+            <input type="number" id="distancia" required min="1">
+            <span>Tempo estimado para entrega:</span>
+            <input type="number" id="tempo" min="0">
+            <div class="actions">
+              <button type="submit">Cadastrar Rota</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="entregas" class="admin-section">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+        <button id="btn-nova-entrega" class="btn">Nova Entrega</button>
+      </div>
+      <h3>Lista de Entregas</h3>
+      <div class="filtros">
+        <label for="filtro-cliente">Cliente
+          <input type="text" id="filtro-cliente" placeholder="Filtrar por cliente">
+        </label>
+        <label for="filtro-rota">Rota
+          <input type="text" id="filtro-rota" placeholder="Filtrar por rota">
+        </label>
+        <label for="filtro-data">Data
+          <input type="date" id="filtro-data">
+        </label>
+        <label for="filtro-status">Status
+          <select id="filtro-status">
+            <option value="">Todos os status</option>
+            <option value="em_preparo">Em preparo</option>
+            <option value="a_caminho">A caminho</option>
+            <option value="entregue">Entregue</option>
+          </select>
+        </label>
+        <button id="btn-filtrar-entregas">Filtrar</button>
+      </div>
+      <table id="tabela-entregas">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Encomenda</th>
+            <th>Rota</th>
+            <th>Data Estimada</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <!-- Modal de cadastro de entrega -->
+      <div class="modal-overlay" id="modal-entrega">
+        <div class="modal-card">
+          <button class="modal-close" id="close-modal-entrega">×</button>
+          <h2>Nova Entrega</h2>
+          <form id="form-entregas">
+            <span>Selecione o cliente:</span>
+            <select id="cliente"><option value="">Selecione</option></select>
+            <span>Selecione a encomenda:</span>
+            <select id="encomenda"><option value="">Selecione</option></select>
+            <span>Selecione a rota:</span>
+            <select id="rota"><option value="">Selecione</option></select>
+            <span>Selecione a data estimada para entrega:</span>
+            <input type="date" id="data-estimada" required>
+            <div class="actions">
+              <button type="submit">Cadastrar Entrega</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Desenvolvido por Thayná Fortunato e Esley Raniele ©2025</p>
+  </footer>
+  <!-- Scripts -->
+  <script src="js/admin-cliente.js?v=999"></script>
+  <script src="js/admin-encomendas.js?v=999"></script>
+  <script src="js/admin-rotas.js?v=999"></script>
+  <script src="js/admin-entregas.js?v=999"></script>
+  <script>
+    const tabs = document.querySelectorAll('.admin-tab');
+    const sections = document.querySelectorAll('.admin-section');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.section).classList.add('active');
+      });
+    });
+    // Modal Cliente
+    function setupModal(btnId, modalId, closeId) {
+      const btn = document.getElementById(btnId);
+      const modal = document.getElementById(modalId);
+      const close = document.getElementById(closeId);
+      btn.addEventListener('click', () => { modal.classList.add('active'); });
+      close.addEventListener('click', () => { modal.classList.remove('active'); });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    }
+    setupModal('btn-novo-cliente', 'modal-cliente', 'close-modal-cliente');
+    setupModal('btn-nova-encomenda', 'modal-encomenda', 'close-modal-encomenda');
+    setupModal('btn-nova-rota', 'modal-rota', 'close-modal-rota');
+    setupModal('btn-nova-entrega', 'modal-entrega', 'close-modal-entrega');
+  </script>
+</body>
+</html>
