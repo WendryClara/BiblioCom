@@ -21,9 +21,9 @@ export class Obra {
 
   @Column({ type: 'varchar', length: 200, nullable: false })
   titulo: string;
-
-  @Column({ type: 'varchar', length: 20, unique: true, nullable: false })
-  isbn: string;
+  
+  @Column({ type: 'varchar', length: 20, unique: true, nullable: true })
+  isbn: string | null;
 
   @Column({ type: 'int', name: 'ano_publicacao', nullable: false })
   anoPublicacao: number;

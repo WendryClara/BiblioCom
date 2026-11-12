@@ -20,6 +20,7 @@ export enum EstadoConservacao {
   NOVO = 'NOVO',
   BOM = 'BOM',
   DESGASTADO = 'DESGASTADO',
+  DESCARTADO = 'DESCARTADO',
   DANIFICADO = 'DANIFICADO',
 }
 
